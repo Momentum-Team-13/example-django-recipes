@@ -30,6 +30,7 @@ urlpatterns = [
         core_views.add_ingredient,
         name="add_ingredient",
     ),
+    path("recipes/<int:recipe_pk>/copy", core_views.copy_recipe, name="copy_recipe"),
     path("admin/", admin.site.urls),
     path("accounts/", include("registration.backends.simple.urls")),
 ]

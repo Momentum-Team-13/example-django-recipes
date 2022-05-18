@@ -1,4 +1,5 @@
 import datetime
+import copy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, F
@@ -37,6 +38,7 @@ def recipe_detail(request, pk):
     )
 
 
+@login_required
 def add_recipe(request):
     if request.method == "POST":
         form = RecipeForm(data=request.POST)
@@ -53,6 +55,7 @@ def add_recipe(request):
     return render(request, "core/add_recipe.html", {"form": form})
 
 
+@login_required
 def add_ingredient(request, recipe_pk):
     recipe = get_object_or_404(request.user.recipes, pk=recipe_pk)
 
@@ -65,3 +68,18 @@ def add_ingredient(request, recipe_pk):
             ingredient.save()
 
     return redirect("recipe_detail", pk=recipe.pk)
+
+
+@login_required
+def copy_recipe(request, recipe_pk):
+    original_recipe = get_object_or_404(Recipe, pk=recipe_pk)
+    new_recipe = copy.deepcopy(original_recipe)
+    new_recipe.pk = None
+    new_recipe.original_recipe = original_recipe
+    new_recipe.public = False
+    new_recipe.save()
+
+    for ingredient in original_recipe.ingredients.all():
+        new_recipe.ingredients.create(amount=ingredient.amount, item=ingredient.item)
+
+    return redirect("recipe_detail", pk=new_recipe.pk)
