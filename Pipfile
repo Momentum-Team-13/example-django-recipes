@@ -12,6 +12,7 @@ django-debug-toolbar = "*"
 psycopg2-binary = "*"
 django-on-heroku = "*"
 gunicorn = "*"
+django-ordered-model = "*"
 
 [dev-packages]
 black = "*"

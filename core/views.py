@@ -6,7 +6,7 @@ from django.db.models import Count, F
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Recipe
-from .forms import RecipeForm, IngredientForm
+from .forms import RecipeForm, IngredientForm, RecipeStepForm
 
 
 def recipe_list(request):
@@ -68,6 +68,26 @@ def add_ingredient(request, recipe_pk):
             ingredient.save()
 
     return redirect("recipe_detail", pk=recipe.pk)
+
+
+def add_recipe_step(request, recipe_pk):
+    recipe = get_object_or_404(request.user.recipes, pk=recipe_pk)
+
+    if request.method == "POST":
+        form = RecipeStepForm(data=request.POST)
+
+        if form.is_valid():
+            recipe_step = form.save(commit=False)
+            recipe_step.recipe = recipe
+            recipe_step.save()
+
+            return redirect("recipe_detail", pk=recipe.pk)
+    else:
+        form = RecipeStepForm()
+
+    return render(
+        request, "core/add_recipe_step.html", {"form": form, "recipe": recipe}
+    )
 
 
 @login_required

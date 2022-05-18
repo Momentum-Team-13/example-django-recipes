@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Q
+from ordered_model.models import OrderedModel
 
 
 class User(AbstractUser):
@@ -42,6 +43,18 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# https://github.com/django-ordered-model/django-ordered-model
+class RecipeStep(OrderedModel):
+    recipe = models.ForeignKey(
+        to=Recipe, on_delete=models.CASCADE, related_name="steps"
+    )
+    text = models.TextField()
+    order_with_respect_to = "recipe"
+
+    def __str__(self):
+        return f"{self.order} {self.text}"
 
 
 class Ingredient(models.Model):

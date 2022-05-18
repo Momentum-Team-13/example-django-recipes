@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ingredient, Recipe
+from .models import Ingredient, Recipe, RecipeStep
 
 
 TEXT_INPUT_CLASSES = "pa2 f4 w-100"
@@ -33,3 +33,13 @@ class IngredientForm(forms.ModelForm):
             "amount",
             "item",
         ]
+
+
+class RecipeStepForm(forms.ModelForm):
+    class Meta:
+        model = RecipeStep
+        fields = ["text"]
+
+    widgets = {
+        "text": forms.TextInput(attrs={"class": TEXT_INPUT_CLASSES}),
+    }
