@@ -10,15 +10,19 @@
       rel="stylesheet"
       href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"
     />
+    {% block css %}{% endblock css %}
   </head>
   <body class="sans-serif bg-near-white">
-    <header class="pa3 bg-gold black">
-      <h1 class="ma0"><a class="black no-underline" href="{% url 'homepage' %}">Recipe Book</a></h1>
+    <header class="pa3 bg-near-black light-purple">
+      <h1 class="ma0"><a class="light-purple no-underline" href="{% url 'homepage' %}">Recipe Book</a></h1>
       <div class="flex justify-between">
         {% if user.is_authenticated %}
         <div class="mr2 b">
           Hello, {{ user.username }}!
-          <a href="{% url 'auth_logout' %}">Log Out</a>
+          <a href={% url 'auth_logout' %} class="near-white">Log Out</a>
+        </div>
+        <div class="mr2">
+          <a href={% url 'todays_meal_plan' %} class="near-white">Today's meal plan</a>
         </div>
         {% endif %}
     </div>
@@ -32,7 +36,7 @@
         bg-washed-red
         {% endif %}
       ">
-       {{ message }}
+        {{ message }}
       </div>
       {% endfor %}
     {% endif %}

@@ -13,10 +13,12 @@ psycopg2-binary = "*"
 django-on-heroku = "*"
 gunicorn = "*"
 django-ordered-model = "*"
+django-toggle-m2m = "*"
 
 [dev-packages]
 black = "*"
 flake8 = "*"
+pdbpp = "*"
 
 [requires]
 python_version = "3.10"

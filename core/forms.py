@@ -43,3 +43,7 @@ class RecipeStepForm(forms.ModelForm):
     widgets = {
         "text": forms.TextInput(attrs={"class": TEXT_INPUT_CLASSES}),
     }
+
+
+class MealPlanForm(forms.Form):
+    recipe = forms.ChoiceField(choices=[])

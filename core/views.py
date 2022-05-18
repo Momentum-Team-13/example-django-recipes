@@ -3,8 +3,9 @@ import copy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, F
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import csrf_exempt
 from .models import Recipe
 from .forms import RecipeForm, IngredientForm, RecipeStepForm
 
@@ -103,3 +104,57 @@ def copy_recipe(request, recipe_pk):
         new_recipe.ingredients.create(amount=ingredient.amount, item=ingredient.item)
 
     return redirect("recipe_detail", pk=new_recipe.pk)
+
+
+@login_required
+def show_meal_plan(request, year=None, month=None, day=None):
+    """
+    Given a year, month, and day, look up the meal plan for the current user for that
+    day and display it.
+
+    If a form is submitted to add a recipe, then go ahead and add recipe to the
+    meal plan for that day.
+    """
+    if year is None:
+        date_for_plan = datetime.date.today()
+    else:
+        date_for_plan = datetime.date(year, month, day)
+    next_day = date_for_plan + datetime.timedelta(days=1)
+    prev_day = date_for_plan + datetime.timedelta(days=-1)
+
+    # https://docs.djangoproject.com/en/4.0/ref/models/querysets/#get-or-create
+    meal_plan, _ = request.user.meal_plans.get_or_create(date=date_for_plan)
+
+    # meal_plan, _ = MealPlan.objects.get_or_create(user=request.user, date=date_for_plan)
+    recipes_not_in_mealplan = Recipe.objects.for_user(request.user).exclude(
+        pk__in=[r.pk for r in meal_plan.recipes.all()]
+    )
+
+    return render(
+        request,
+        "core/show_mealplan.html",
+        {
+            "plan": meal_plan,
+            "recipes_to_add": recipes_not_in_mealplan,
+            "date": date_for_plan,
+            "next_day": next_day,
+            "prev_day": prev_day,
+        },
+    )
+
+
+@login_required
+@csrf_exempt
+def meal_plan_add_remove_recipe(request):
+    request_is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    date = request.POST.get("date")
+    recipe_pk = request.POST.get("pk")
+    meal_plan, _ = request.user.meal_plans.get_or_create(date=date)
+    recipe = Recipe.objects.for_user(request.user).get(pk=recipe_pk)
+
+    meal_plan.add_or_remove_recipe(recipe)
+
+    if request_is_ajax:
+        return JsonResponse({}, status=204)
+
+    return HttpResponse(status=204)
