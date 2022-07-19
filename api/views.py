@@ -30,11 +30,13 @@ from rest_framework import status
 
 
 # This will handle GET api/recipes
+# https://www.django-rest-framework.org/api-guide/generic-views/#listapiview
 class RecipeListView(ListAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 
 # This can handle GET and POST api/recipes
+# https://www.django-rest-framework.org/api-guide/generic-views/#listcreateapiview
 class RecipeListCreateView(ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
