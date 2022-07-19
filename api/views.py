@@ -1,5 +1,5 @@
 # from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView
 from core.models import Recipe
 from rest_framework.response import Response
 from .serializers import RecipeSerializer
@@ -50,3 +50,12 @@ class RecipeListCreateView(ListCreateAPIView):
     def perform_create(self, serializer):
         # "self" here is the instance of the view -- I can get to the request object through that!
         serializer.save(author=self.request.user)
+
+
+# GET api/recipes/<int:pk>
+# https://www.django-rest-framework.org/api-guide/generic-views/#retrieveapiview
+class RecipeDetailView(RetrieveAPIView):
+  queryset = Recipe.objects.all()
+  serializer_class = RecipeSerializer
+
+

@@ -52,6 +52,7 @@ urlpatterns = [
     path("accounts/", include("registration.backends.simple.urls")),
     path('api-auth/', include('rest_framework.urls')),
     path("api/recipes", api_views.RecipeListCreateView.as_view(), name="recipe_list" ),
+    path("api/recipes/<int:pk>", api_views.RecipeDetailView.as_view(), name="recipe_detail" ),
 ]
 
 if settings.DEBUG:
