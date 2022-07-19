@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from core import views as core_views
+from api import views as api_views
 
 urlpatterns = [
     path("", core_views.recipe_list, name="homepage"),
@@ -49,6 +50,8 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     path("accounts/", include("registration.backends.simple.urls")),
+    path('api-auth/', include('rest_framework.urls')),
+    path("api/recipes", api_views.RecipeListCreateView.as_view(), name="recipe_list" ),
 ]
 
 if settings.DEBUG:
