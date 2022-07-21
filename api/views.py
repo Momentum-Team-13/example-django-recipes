@@ -2,7 +2,7 @@
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView
 from core.models import Recipe
 from rest_framework.response import Response
-from .serializers import RecipeSerializer
+from .serializers import RecipeSerializer, RecipeDetailSerializer
 from rest_framework import status
 
 # Create your views here.
@@ -56,6 +56,6 @@ class RecipeListCreateView(ListCreateAPIView):
 # https://www.django-rest-framework.org/api-guide/generic-views/#retrieveapiview
 class RecipeDetailView(RetrieveAPIView):
   queryset = Recipe.objects.all()
-  serializer_class = RecipeSerializer
+  serializer_class = RecipeDetailSerializer
 
 
