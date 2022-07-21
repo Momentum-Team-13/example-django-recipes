@@ -1,9 +1,11 @@
 # from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView
+from django.shortcuts import get_object_or_404
+from rest_framework.generics import CreateAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from core.models import Recipe
 from rest_framework.response import Response
-from .serializers import RecipeSerializer, RecipeDetailSerializer
+from .serializers import IngredientSerializer, RecipeSerializer, RecipeDetailSerializer
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 
 # Create your views here.
 # GET api/recipes
@@ -58,4 +60,11 @@ class RecipeDetailView(RetrieveAPIView):
   queryset = Recipe.objects.all()
   serializer_class = RecipeDetailSerializer
 
+
+class IngredientCreateView(CreateAPIView):
+    serializer_class = IngredientSerializer
+
+    def perform_create(self, serializer):
+        recipe = get_object_or_404(Recipe, pk=self.kwargs.get("recipe_pk"))
+        serializer.save(recipe=recipe)
 
