@@ -13,6 +13,20 @@ class IngredientSerializer(serializers.ModelSerializer):
     model = Ingredient
     fields = [ 'pk', 'item', 'amount',]
 
+
+class RecipeIngredientsSerializer(serializers.ModelSerializer):
+  ingredients = IngredientSerializer(many=True, required=False)
+
+  class Meta:
+    model = Recipe
+    fields = ['ingredients']
+
+  def create(self, validated_data):
+        recipe = validated_data.get("recipe")
+        for ingredient in validated_data.get("ingredients"):
+          recipe.ingredients.create(item=ingredient["item"], amount=ingredient["amount"] )
+        return recipe
+
 class RecipeSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field="username", read_only=True)
     # author = UserSerializer()

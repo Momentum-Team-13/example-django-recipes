@@ -53,7 +53,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path("api/recipes", api_views.RecipeListCreateView.as_view(), name="recipe_list" ),
     path("api/recipes/<int:pk>", api_views.RecipeDetailView.as_view(), name="recipe_detail" ),
-    path("api/recipes/<int:recipe_pk>/ingredients", api_views.IngredientCreateView.as_view(), name="add_ingredient")
+    path("api/recipes/<int:recipe_pk>/ingredients", api_views.IngredientCreateView.as_view(), name="add_ingredient"),
+    path("api/recipes/<int:recipe_pk>/multi-ingredients", api_views.IngredientCreateMultiView.as_view(), name="add_ingredient")
 ]
 
 if settings.DEBUG:

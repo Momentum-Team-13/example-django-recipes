@@ -1,9 +1,9 @@
 # from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
-from core.models import Recipe
+from core.models import Recipe, Ingredient
 from rest_framework.response import Response
-from .serializers import IngredientSerializer, RecipeSerializer, RecipeDetailSerializer
+from .serializers import IngredientSerializer, RecipeIngredientsSerializer, RecipeSerializer, RecipeDetailSerializer
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 
@@ -24,8 +24,8 @@ from rest_framework.exceptions import NotFound
 #     if serializer.is_valid():
 #         serializer.save(author=request.user)
 #         # habit = form.save(commit=False)
-#           # habit.user = request.user
-#           # habit.save()
+#         # habit.user = request.user
+#         # habit.save()
 
 #         return Response(serializer.data, status=status.HTTP_201_CREATED)
 #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -68,3 +68,11 @@ class IngredientCreateView(CreateAPIView):
         recipe = get_object_or_404(Recipe, pk=self.kwargs.get("recipe_pk"))
         serializer.save(recipe=recipe)
 
+
+
+class IngredientCreateMultiView(CreateAPIView):
+      serializer_class = RecipeIngredientsSerializer
+
+      def perform_create(self, serializer):
+          recipe = get_object_or_404(Recipe, pk=self.kwargs.get("recipe_pk"))
+          serializer.save(recipe=recipe)
