@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from rest_framework import serializers
 from core.models import Ingredient, Recipe, User
 
@@ -11,7 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
   class Meta:
     model = Ingredient
-    fields = [ 'pk', 'item', 'amount',]
+    fields = [ 'pk', 'item', 'amount']
+
 
 
 class RecipeIngredientsSerializer(serializers.ModelSerializer):
@@ -21,10 +23,15 @@ class RecipeIngredientsSerializer(serializers.ModelSerializer):
     model = Recipe
     fields = ['ingredients']
 
+
   def create(self, validated_data):
         recipe = validated_data.get("recipe")
+
         for ingredient in validated_data.get("ingredients"):
-          recipe.ingredients.create(item=ingredient["item"], amount=ingredient["amount"] )
+          try:
+            recipe.ingredients.create(item=ingredient["item"], amount=ingredient["amount"] )
+          except IntegrityError as error:
+            raise serializers.ValidationError({"error": error})
         return recipe
 
 class RecipeSerializer(serializers.ModelSerializer):

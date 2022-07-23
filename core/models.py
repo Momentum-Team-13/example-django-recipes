@@ -66,6 +66,11 @@ class Ingredient(models.Model):
     amount = models.CharField(max_length=20)
     item = models.CharField(max_length=255)
 
+    class Meta:
+      constraints = [
+        UniqueConstraint(fields=["recipe", "item"], name="unique_recipe_ingredient")
+      ]
+
     def __str__(self):
         return f"{self.amount} {self.item}"
 
