@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "debug_toolbar",
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
     "core",
 ]
 
@@ -183,5 +185,7 @@ del DATABASES["default"]["OPTIONS"]["sslmode"]
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',),
 }

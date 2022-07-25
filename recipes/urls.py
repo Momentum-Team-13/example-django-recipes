@@ -51,6 +51,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("registration.backends.simple.urls")),
     path('api-auth/', include('rest_framework.urls')),
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.authtoken')),
     path("api/recipes", api_views.RecipeListCreateView.as_view(), name="recipe_list" ),
     path("api/recipes/<int:pk>", api_views.RecipeDetailView.as_view(), name="recipe_detail" ),
     path("api/recipes/<int:recipe_pk>/ingredients", api_views.IngredientCreateView.as_view(), name="add_ingredient"),

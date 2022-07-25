@@ -15,6 +15,7 @@ gunicorn = "*"
 django-ordered-model = "*"
 django-toggle-m2m = "*"
 djangorestframework = "*"
+djoser = "*"
 
 [dev-packages]
 black = "*"
